@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import NewHeader from "@/components/NewHeader";
 import Hero from "@/components/Hero";
 import RestaurantStatusSection from "@/components/RestaurantStatusSection";
 import RestaurantSection from "@/components/RestaurantSection";
@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F5F5] text-[#333333] font-[Raleway]">
-      <Header />
+      <NewHeader />
       <Hero />
       <RestaurantStatusSection />
       <RestaurantSection />
