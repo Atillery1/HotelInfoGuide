@@ -91,7 +91,7 @@ export default function NewHeader() {
           
           {/* Time display - Centered */}
           <div className="flex justify-center w-full mb-3">
-            <div className="flex items-center justify-center bg-gray-900 px-4 py-2 rounded-full shadow">
+            <div className="flex items-center justify-center bg-black border border-[#DBA53A]/30 px-4 py-2 rounded-sm shadow">
               <Clock className="h-4 w-4 text-[#DBA53A] mr-2" />
               <div className="text-center">
                 <p className="font-bold text-sm">{currentTime}</p>
@@ -102,29 +102,29 @@ export default function NewHeader() {
           
           {/* Navigation */}
           <nav className="w-full">
-            <ul className="flex justify-between bg-gray-900 rounded-lg overflow-hidden shadow-md">
+            <ul className="flex justify-between bg-black border border-[#DBA53A]/30 rounded-sm overflow-hidden shadow-md">
               <li className="flex-1">
                 <a 
                   href="#dining" 
-                  className="flex flex-col items-center py-2 hover:bg-[#DBA53A]/20 transition-colors duration-200"
+                  className="flex flex-col items-center py-3 hover:bg-[#DBA53A] hover:text-black transition-colors duration-200"
                 >
-                  <span className="text-[#DBA53A] font-bold text-sm uppercase">Dining</span>
+                  <span className="text-[#DBA53A] font-bold text-sm uppercase hover:text-black">Dining</span>
                 </a>
               </li>
-              <li className="flex-1 border-l border-r border-gray-700">
+              <li className="flex-1 border-l border-r border-[#DBA53A]/30">
                 <a 
                   href="#amenities" 
-                  className="flex flex-col items-center py-2 hover:bg-[#DBA53A]/20 transition-colors duration-200"
+                  className="flex flex-col items-center py-3 hover:bg-[#DBA53A] hover:text-black transition-colors duration-200"
                 >
-                  <span className="text-[#DBA53A] font-bold text-sm uppercase">Amenities</span>
+                  <span className="text-[#DBA53A] font-bold text-sm uppercase hover:text-black">Amenities</span>
                 </a>
               </li>
               <li className="flex-1">
                 <a 
                   href="#internet" 
-                  className="flex flex-col items-center py-2 hover:bg-[#DBA53A]/20 transition-colors duration-200"
+                  className="flex flex-col items-center py-3 hover:bg-[#DBA53A] hover:text-black transition-colors duration-200"
                 >
-                  <span className="text-[#DBA53A] font-bold text-sm uppercase">Internet</span>
+                  <span className="text-[#DBA53A] font-bold text-sm uppercase hover:text-black">Internet</span>
                 </a>
               </li>
             </ul>

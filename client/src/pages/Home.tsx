@@ -38,13 +38,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 text-gray-800 font-[Raleway]">
+    <div className="min-h-screen flex flex-col bg-gray-900 text-white font-[Raleway]">
       <NewHeader />
       <Hero />
       <RestaurantSection />
-      <div className="h-3 bg-gradient-to-r from-transparent via-[#DBA53A] to-transparent w-4/5 mx-auto my-8"></div>
+      <div className="h-1 bg-gradient-to-r from-transparent via-[#DBA53A] to-transparent w-4/5 mx-auto my-8"></div>
       <AmenitiesSection />
-      <div className="h-3 bg-gradient-to-r from-transparent via-[#DBA53A] to-transparent w-4/5 mx-auto my-8"></div>
+      <div className="h-1 bg-gradient-to-r from-transparent via-[#DBA53A] to-transparent w-4/5 mx-auto my-8"></div>
       <InternetSection />
       <Footer />
     </div>
