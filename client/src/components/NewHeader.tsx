@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Cloud, CloudRain, Sun, CloudSun, Droplet, Thermometer, Wind, CloudSnow } from "lucide-react";
+import { Cloud, CloudRain, Sun, CloudSun, Droplet, Thermometer, Wind, CloudSnow, Clock } from "lucide-react";
 import axios from "axios";
 
 // Import the logo
@@ -29,16 +29,14 @@ export default function NewHeader() {
       setCurrentTime(now.toLocaleTimeString([], { 
         hour: '2-digit', 
         minute: '2-digit',
-        second: '2-digit',
         hour12: true 
       }));
       
-      // Format date as Month Day, Year
+      // Format date as Month Day, Year - shorter format for mobile
       setCurrentDate(now.toLocaleDateString([], { 
-        weekday: 'long',
-        month: 'long', 
-        day: 'numeric',
-        year: 'numeric'
+        weekday: 'short',
+        month: 'short', 
+        day: 'numeric'
       }));
     };
     
@@ -69,10 +67,10 @@ export default function NewHeader() {
         
         // Randomly select a weather condition based on the current hour
         const conditions = [
-          { description: "Clear sky", icon: isNight ? "clear-night" : "clear-day" },
-          { description: "Partly cloudy", icon: isNight ? "partly-cloudy-night" : "partly-cloudy-day" },
+          { description: "Clear", icon: isNight ? "clear-night" : "clear-day" },
+          { description: "Partly Cloudy", icon: isNight ? "partly-cloudy-night" : "partly-cloudy-day" },
           { description: "Cloudy", icon: "cloudy" },
-          { description: "Light rain", icon: "rain" },
+          { description: "Rain", icon: "rain" },
         ];
         
         const randomIndex = Math.floor(Math.sin(Date.now() / 7200000) * 2 + 2) % conditions.length;
@@ -108,89 +106,106 @@ export default function NewHeader() {
     
     switch (weather.icon) {
       case "clear-day":
-        return <Sun className="h-8 w-8 text-yellow-400" />;
+        return <Sun className="h-6 w-6 text-yellow-400" />;
       case "clear-night":
-        return <Sun className="h-8 w-8 text-yellow-200" />;
+        return <Sun className="h-6 w-6 text-yellow-200" />;
       case "partly-cloudy-day":
-        return <CloudSun className="h-8 w-8 text-gray-400" />;
+        return <CloudSun className="h-6 w-6 text-gray-400" />;
       case "partly-cloudy-night":
-        return <CloudSun className="h-8 w-8 text-gray-300" />;
+        return <CloudSun className="h-6 w-6 text-gray-300" />;
       case "cloudy":
-        return <Cloud className="h-8 w-8 text-gray-500" />;
+        return <Cloud className="h-6 w-6 text-gray-400" />;
       case "rain":
-        return <CloudRain className="h-8 w-8 text-blue-400" />;
+        return <CloudRain className="h-6 w-6 text-blue-400" />;
       case "snow":
-        return <CloudSnow className="h-8 w-8 text-blue-100" />;
+        return <CloudSnow className="h-6 w-6 text-blue-100" />;
       default:
-        return <Sun className="h-8 w-8 text-yellow-400" />;
+        return <Sun className="h-6 w-6 text-yellow-400" />;
     }
   };
 
   return (
-    <header className="bg-[#0F2C59] text-white py-3 shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Logo and Restaurant Name */}
-          <div className="flex items-center mb-4 md:mb-0">
+    <header className="bg-gradient-to-b from-[#0A1F3F] to-[#0F2C59] text-white py-4 shadow-lg sticky top-0 z-50">
+      <div className="container mx-auto px-2">
+        {/* Main header content */}
+        <div className="flex flex-col items-center">
+          {/* Logo and Hotel Name - Centered on mobile */}
+          <div className="flex items-center justify-center mb-2">
             <img 
               src={mainLogo} 
               alt="THE MAIN" 
-              className="h-16 w-16 mr-3"
+              className="h-14 w-14 mr-3"
             />
-            <div>
-              <h1 className="font-['Playfair_Display'] text-2xl font-bold">THE MAIN</h1>
-              <p className="text-xs text-[#DBA53A]">Luxury Hotel & Conference Center</p>
+            <div className="text-center">
+              <h1 className="font-bold text-2xl tracking-wide">THE MAIN</h1>
+              <p className="text-xs text-[#DBA53A] font-semibold">NORFOLK, VA</p>
             </div>
           </div>
           
-          {/* Date, Time and Weather */}
-          <div className="flex flex-col items-center md:items-end">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl font-bold mr-2">{currentTime}</span>
-              <span className="text-[#DBA53A]">{currentDate}</span>
-            </div>
-            
-            {/* Weather Information */}
-            <div className="flex items-center">
+          {/* Time and Weather - More compact for mobile */}
+          <div className="flex justify-center w-full mb-3">
+            <div className="flex items-center justify-between w-full max-w-sm bg-[#162d4c]/70 px-3 py-2 rounded-lg shadow">
+              {/* Time and Date */}
+              <div className="flex items-center mr-2">
+                <Clock className="h-4 w-4 text-[#DBA53A] mr-1" />
+                <div>
+                  <p className="font-bold text-sm">{currentTime}</p>
+                  <p className="text-xs text-gray-300">{currentDate}</p>
+                </div>
+              </div>
+              
+              {/* Divider */}
+              <div className="h-10 w-px bg-gray-600/50"></div>
+              
+              {/* Weather */}
               {loading ? (
-                <p>Loading weather...</p>
+                <p className="text-xs">Loading...</p>
               ) : error ? (
-                <p>{error}</p>
+                <p className="text-xs text-red-300">{error}</p>
               ) : weather && (
-                <div className="flex items-center bg-[#1A3A6B] p-2 rounded-md">
-                  <div className="mr-3">
-                    {renderWeatherIcon()}
-                  </div>
-                  <div>
-                    <p className="font-bold flex items-center">
-                      <Thermometer className="h-4 w-4 mr-1 text-red-400" />
-                      {weather.temperature}°F <span className="ml-2 font-normal">{weather.description}</span>
+                <div className="flex items-center ml-2">
+                  {renderWeatherIcon()}
+                  <div className="ml-1">
+                    <p className="font-bold text-sm flex items-center">
+                      {weather.temperature}°F
                     </p>
-                    <div className="flex text-xs text-gray-300">
-                      <p className="flex items-center mr-3">
-                        <Droplet className="h-3 w-3 mr-1 text-blue-300" />
-                        {weather.humidity}% humidity
-                      </p>
-                      <p className="flex items-center">
-                        <Wind className="h-3 w-3 mr-1 text-blue-100" />
-                        {weather.windSpeed} mph
-                      </p>
-                    </div>
+                    <p className="text-xs text-gray-300">{weather.description}</p>
                   </div>
                 </div>
               )}
             </div>
           </div>
+          
+          {/* Navigation */}
+          <nav className="w-full">
+            <ul className="flex justify-between bg-[#0A1F3F]/80 rounded-lg overflow-hidden shadow-md">
+              <li className="flex-1">
+                <a 
+                  href="#dining" 
+                  className="flex flex-col items-center py-2 hover:bg-[#DBA53A]/20 transition-colors duration-200"
+                >
+                  <span className="text-[#DBA53A] font-bold text-sm uppercase">Dining</span>
+                </a>
+              </li>
+              <li className="flex-1 border-l border-r border-gray-700/50">
+                <a 
+                  href="#amenities" 
+                  className="flex flex-col items-center py-2 hover:bg-[#DBA53A]/20 transition-colors duration-200"
+                >
+                  <span className="text-[#DBA53A] font-bold text-sm uppercase">Amenities</span>
+                </a>
+              </li>
+              <li className="flex-1">
+                <a 
+                  href="#internet" 
+                  className="flex flex-col items-center py-2 hover:bg-[#DBA53A]/20 transition-colors duration-200"
+                >
+                  <span className="text-[#DBA53A] font-bold text-sm uppercase">Internet</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
-        
-        {/* Navigation */}
-        <nav className="mt-4">
-          <ul className="flex flex-wrap justify-center md:justify-center space-x-1 md:space-x-6">
-            <li><a href="#dining" className="px-3 py-2 text-sm md:text-base hover:text-[#DBA53A] transition-colors duration-200">DINING</a></li>
-            <li><a href="#amenities" className="px-3 py-2 text-sm md:text-base hover:text-[#DBA53A] transition-colors duration-200">AMENITIES</a></li>
-            <li><a href="#internet" className="px-3 py-2 text-sm md:text-base hover:text-[#DBA53A] transition-colors duration-200">INTERNET</a></li>
-          </ul>
-        </nav>
       </div>
     </header>
   );
