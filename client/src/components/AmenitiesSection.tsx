@@ -45,7 +45,7 @@ export default function AmenitiesSection() {
               <div className="bg-purple-100 p-2 rounded-full mr-3">
                 <Bath className="h-5 w-5 text-purple-600" />
               </div>
-              <span className="text-sm">Luxury Toiletries</span>
+              <span className="text-sm">Private Bathrooms</span>
             </div>
             <div className="flex items-center p-3 rounded-lg bg-cyan-50">
               <div className="bg-cyan-100 p-2 rounded-full mr-3">
