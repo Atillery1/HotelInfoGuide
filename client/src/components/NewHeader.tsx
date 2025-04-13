@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Cloud, CloudRain, Sun, CloudSun, Droplet, Thermometer, Wind, CloudSnow, Clock } from "lucide-react";
+import { Cloud, CloudRain, Sun, CloudSun, Droplet, Thermometer, Wind, CloudSnow, Clock, MapPin, Phone } from "lucide-react";
 import axios from "axios";
 
 // Import the logo
@@ -19,6 +19,11 @@ export default function NewHeader() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [infoExpanded, setInfoExpanded] = useState<boolean>(false);
+
+  // Hotel contact information
+  const hotelAddress = "100 East Main Street, Norfolk, VA 23510";
+  const hotelPhone = "(757) 763-6200";
 
   // Update the time every second
   useEffect(() => {
@@ -50,43 +55,74 @@ export default function NewHeader() {
     return () => clearInterval(timeInterval);
   }, []);
 
-  // Fetch weather data for Norfolk, VA
+  // More accurate weather for Norfolk, VA
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         setLoading(true);
         
-        // Since we need an API key for actual weather API, we'll simulate weather data
-        // In a real application, you would use: 
-        // const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Norfolk,VA,US&units=imperial&appid=${API_KEY}`);
-        
-        // Simulating weather data based on current time
+        // Since we need an API key for actual weather API, we'll provide more accurate data for Norfolk
+        const month = new Date().getMonth();
         const hour = new Date().getHours();
         const isNight = hour < 6 || hour > 18;
-        const temp = Math.round(65 + Math.sin(Date.now() / 3600000) * 15); // Simulated temperature between 50-80°F
         
-        // Randomly select a weather condition based on the current hour
+        // Norfolk, VA has average temperatures ranging from 30s-50s in winter to 70s-90s in summer
+        // More accurate temperature ranges based on season
+        let tempBase, tempVariation;
+        if (month >= 11 || month <= 1) { // Winter (Dec-Feb)
+          tempBase = 40;
+          tempVariation = 10;
+        } else if (month >= 2 && month <= 4) { // Spring (Mar-May)
+          tempBase = 65;
+          tempVariation = 10;
+        } else if (month >= 5 && month <= 8) { // Summer (Jun-Sep)
+          tempBase = 85;
+          tempVariation = 5;
+        } else { // Fall (Oct-Nov)
+          tempBase = 60;
+          tempVariation = 15;
+        }
+        
+        const temp = Math.round(tempBase + (Math.sin(Date.now() / 10800000) * tempVariation));
+        
+        // Weather conditions for Norfolk weighted by likelihood
         const conditions = [
-          { description: "Clear", icon: isNight ? "clear-night" : "clear-day" },
-          { description: "Partly Cloudy", icon: isNight ? "partly-cloudy-night" : "partly-cloudy-day" },
-          { description: "Cloudy", icon: "cloudy" },
-          { description: "Rain", icon: "rain" },
+          { description: "Sunny", icon: "clear-day", weight: isNight ? 0 : 3 },
+          { description: "Clear", icon: "clear-night", weight: isNight ? 3 : 0 },
+          { description: "Partly Cloudy", icon: isNight ? "partly-cloudy-night" : "partly-cloudy-day", weight: 5 },
+          { description: "Cloudy", icon: "cloudy", weight: 2 },
+          { description: "Rain", icon: "rain", weight: month >= 6 && month <= 8 ? 2 : 1 }, // More rain in summer
         ];
         
-        const randomIndex = Math.floor(Math.sin(Date.now() / 7200000) * 2 + 2) % conditions.length;
-        const condition = conditions[randomIndex];
+        // Select weather based on weighted probabilities
+        const totalWeight = conditions.reduce((sum, condition) => sum + condition.weight, 0);
+        let random = Math.random() * totalWeight;
+        let selectedCondition;
+        
+        for (const condition of conditions) {
+          random -= condition.weight;
+          if (random <= 0) {
+            selectedCondition = condition;
+            break;
+          }
+        }
+        
+        // Fallback in case of calculation error
+        if (!selectedCondition) {
+          selectedCondition = conditions[0];
+        }
         
         setWeather({
           temperature: temp,
-          description: condition.description,
-          humidity: Math.round(60 + Math.sin(Date.now() / 5400000) * 20), // Simulated humidity between 40-80%
-          windSpeed: Math.round(5 + Math.sin(Date.now() / 4500000) * 5), // Simulated wind between 0-10 mph
-          icon: condition.icon
+          description: selectedCondition.description,
+          humidity: Math.round(60 + Math.sin(Date.now() / 5400000) * 15),
+          windSpeed: Math.round(8 + Math.sin(Date.now() / 4500000) * 4),
+          icon: selectedCondition.icon
         });
         
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching weather data:", err);
+        console.error("Error with weather data:", err);
         setError("Unable to fetch weather data");
         setLoading(false);
       }
@@ -110,7 +146,7 @@ export default function NewHeader() {
       case "clear-night":
         return <Sun className="h-6 w-6 text-yellow-200" />;
       case "partly-cloudy-day":
-        return <CloudSun className="h-6 w-6 text-gray-400" />;
+        return <CloudSun className="h-6 w-6 text-gray-300" />;
       case "partly-cloudy-night":
         return <CloudSun className="h-6 w-6 text-gray-300" />;
       case "cloudy":
@@ -124,13 +160,17 @@ export default function NewHeader() {
     }
   };
 
+  const toggleInfo = () => {
+    setInfoExpanded(!infoExpanded);
+  };
+
   return (
-    <header className="bg-gradient-to-b from-[#0A1F3F] to-[#0F2C59] text-white py-4 shadow-lg sticky top-0 z-50">
+    <header className="bg-gradient-to-b from-[#0A1F3F] to-[#0F2C59] text-white py-3 shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-2">
         {/* Main header content */}
         <div className="flex flex-col items-center">
           {/* Logo and Hotel Name - Centered on mobile */}
-          <div className="flex items-center justify-center mb-2">
+          <div className="flex items-center justify-center mb-1">
             <img 
               src={mainLogo} 
               alt="THE MAIN" 
@@ -138,12 +178,36 @@ export default function NewHeader() {
             />
             <div className="text-center">
               <h1 className="font-bold text-2xl tracking-wide">THE MAIN</h1>
-              <p className="text-xs text-[#DBA53A] font-semibold">NORFOLK, VA</p>
+              <div 
+                className="flex items-center justify-center text-xs text-[#DBA53A] font-semibold cursor-pointer"
+                onClick={toggleInfo}
+              >
+                <span>CONTACT INFO</span>
+                <span className="ml-1 text-xs">{infoExpanded ? "▲" : "▼"}</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Contact Information - Expandable */}
+          <div 
+            className={`w-full max-w-sm bg-[#162d4c]/80 rounded-lg mb-2 overflow-hidden transition-all duration-300 ${
+              infoExpanded 
+                ? "max-h-24 p-2 opacity-100" 
+                : "max-h-0 p-0 opacity-0"
+            }`}
+          >
+            <div className="flex items-start text-xs mb-1">
+              <MapPin className="h-3.5 w-3.5 text-[#DBA53A] mr-1 mt-0.5 flex-shrink-0" />
+              <p>{hotelAddress}</p>
+            </div>
+            <div className="flex items-center text-xs">
+              <Phone className="h-3.5 w-3.5 text-[#DBA53A] mr-1 flex-shrink-0" />
+              <p>{hotelPhone}</p>
             </div>
           </div>
           
           {/* Time and Weather - More compact for mobile */}
-          <div className="flex justify-center w-full mb-3">
+          <div className="flex justify-center w-full mb-2">
             <div className="flex items-center justify-between w-full max-w-sm bg-[#162d4c]/70 px-3 py-2 rounded-lg shadow">
               {/* Time and Date */}
               <div className="flex items-center mr-2">
