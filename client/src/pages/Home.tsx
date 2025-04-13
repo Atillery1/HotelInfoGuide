@@ -38,7 +38,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 text-gray-800 font-[Raleway]">
+    <div className="min-h-screen flex flex-col bg-[#F5F5F5] text-[#333333] font-[Raleway]">
       <NewHeader />
       <Hero />
       <RestaurantSection />
