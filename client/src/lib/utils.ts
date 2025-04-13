@@ -235,3 +235,37 @@ export function getCurrentRoomServiceMenu(restaurant: Restaurant): string {
     return "Dinner";
   }
 }
+
+// Determine which meal period is currently being served
+export function getCurrentMealPeriod(restaurant: Restaurant): string {
+  if (!isRestaurantOpen(restaurant)) {
+    return "";
+  }
+  
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const isWeekend = currentDay === 0 || currentDay === 6;
+  
+  // Check for brunch on weekends
+  if (isWeekend && currentHour >= 9 && currentHour < 15) {
+    // Check if this restaurant specifically mentions brunch in their schedule
+    for (const hours of restaurant.operatingHours) {
+      if (hours.title.toLowerCase().includes('brunch')) {
+        return "Brunch";
+      }
+    }
+  }
+  
+  // Standard meal periods based on time
+  if (currentHour >= 5 && currentHour < 11) {
+    return "Breakfast";
+  } else if (currentHour >= 11 && currentHour < 16) {
+    return "Lunch";
+  } else if (currentHour >= 16 && currentHour < 23) {
+    return "Dinner";
+  } else {
+    // Late night / early morning
+    return "Late Night Menu";
+  }
+}

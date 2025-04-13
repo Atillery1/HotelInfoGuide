@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
-import { Clock, Utensils, Check, X } from "lucide-react";
+import { Clock, Utensils, Check, X, Coffee, UtensilsCrossed } from "lucide-react";
 import { restaurants } from "@/lib/hotelData";
-import { isRestaurantOpen, isRoomServiceAvailable, getCurrentRoomServiceMenu } from "@/lib/utils";
+import { 
+  isRestaurantOpen, 
+  isRoomServiceAvailable, 
+  getCurrentRoomServiceMenu, 
+  getCurrentMealPeriod 
+} from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 export default function RestaurantStatusSection() {
   // State to track open status for real-time updates
   const [openStatuses, setOpenStatuses] = useState<Record<string, boolean>>({});
+  const [currentMeals, setCurrentMeals] = useState<Record<string, string>>({});
   const [roomServiceStatuses, setRoomServiceStatuses] = useState<Record<string, boolean>>({});
   const [roomServiceMenus, setRoomServiceMenus] = useState<Record<string, string>>({});
   
@@ -20,16 +26,19 @@ export default function RestaurantStatusSection() {
       setCurrentTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
       
       const newOpenStatuses: Record<string, boolean> = {};
+      const newCurrentMeals: Record<string, string> = {};
       const newRoomServiceStatuses: Record<string, boolean> = {};
       const newRoomServiceMenus: Record<string, string> = {};
       
       restaurants.forEach(restaurant => {
         newOpenStatuses[restaurant.id] = isRestaurantOpen(restaurant);
+        newCurrentMeals[restaurant.id] = getCurrentMealPeriod(restaurant);
         newRoomServiceStatuses[restaurant.id] = isRoomServiceAvailable(restaurant);
         newRoomServiceMenus[restaurant.id] = getCurrentRoomServiceMenu(restaurant);
       });
       
       setOpenStatuses(newOpenStatuses);
+      setCurrentMeals(newCurrentMeals);
       setRoomServiceStatuses(newRoomServiceStatuses);
       setRoomServiceMenus(newRoomServiceMenus);
     };
@@ -46,6 +55,40 @@ export default function RestaurantStatusSection() {
   // Count open restaurants and available room service
   const openCount = Object.values(openStatuses).filter(Boolean).length;
   const roomServiceCount = Object.values(roomServiceStatuses).filter(Boolean).length;
+  
+  // Helper function to get meal icon
+  const getMealIcon = (mealType: string) => {
+    switch(mealType.toLowerCase()) {
+      case 'breakfast':
+        return <Coffee className="h-3 w-3 mr-1" />;
+      case 'brunch':
+        return <Coffee className="h-3 w-3 mr-1" />;
+      case 'lunch':
+      case 'dinner':
+      case 'late night menu':
+        return <UtensilsCrossed className="h-3 w-3 mr-1" />;
+      default:
+        return null;
+    }
+  };
+  
+  // Helper function to get meal badge color
+  const getMealBadgeClass = (mealType: string) => {
+    switch(mealType.toLowerCase()) {
+      case 'breakfast':
+        return "bg-amber-50 text-amber-800 border-amber-200";
+      case 'brunch':
+        return "bg-orange-50 text-orange-800 border-orange-200";
+      case 'lunch':
+        return "bg-yellow-50 text-yellow-800 border-yellow-200";
+      case 'dinner':
+        return "bg-indigo-50 text-indigo-800 border-indigo-200";
+      case 'late night menu':
+        return "bg-purple-50 text-purple-800 border-purple-200";
+      default:
+        return "bg-gray-50 text-gray-800 border-gray-200";
+    }
+  };
   
   return (
     <section className="py-8 bg-[#F5F5F5]">
@@ -66,24 +109,35 @@ export default function RestaurantStatusSection() {
               <h3 className="font-semibold text-[#0F2C59] mb-3">
                 Currently Open <span className="ml-2 bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs">{openCount} of {restaurants.length}</span>
               </h3>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {restaurants.map(restaurant => (
-                  <li key={restaurant.id} className="flex items-center justify-between">
-                    <div>
-                      <span className="font-medium">{restaurant.name}</span>
-                      <span className="text-xs text-[#888888] ml-1">({restaurant.location})</span>
+                  <li key={restaurant.id} className={`p-2 rounded ${openStatuses[restaurant.id] ? 'bg-green-50' : ''}`}>
+                    <div className="flex items-center justify-between mb-1">
+                      <div>
+                        <span className="font-medium">{restaurant.name}</span>
+                        <span className="text-xs text-[#888888] ml-1">({restaurant.location})</span>
+                      </div>
+                      <div>
+                        {openStatuses[restaurant.id] ? (
+                          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+                            <Check className="mr-1 h-3 w-3" /> Open
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
+                            <X className="mr-1 h-3 w-3" /> Closed
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      {openStatuses[restaurant.id] ? (
-                        <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
-                          <Check className="mr-1 h-3 w-3" /> Open
+                    
+                    {openStatuses[restaurant.id] && currentMeals[restaurant.id] && (
+                      <div className="mt-1 flex items-center">
+                        <Badge variant="outline" className={`text-xs ${getMealBadgeClass(currentMeals[restaurant.id])}`}>
+                          {getMealIcon(currentMeals[restaurant.id])}
+                          Currently serving: {currentMeals[restaurant.id]}
                         </Badge>
-                      ) : (
-                        <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
-                          <X className="mr-1 h-3 w-3" /> Closed
-                        </Badge>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -119,8 +173,11 @@ export default function RestaurantStatusSection() {
                         </div>
                         
                         {roomServiceStatuses[restaurant.id] && (
-                          <div className="text-xs text-[#555555] mt-1">
-                            Currently serving: <span className="font-semibold">{roomServiceMenus[restaurant.id]}</span>
+                          <div className="mt-1 flex items-center">
+                            <Badge variant="outline" className={`text-xs ${getMealBadgeClass(roomServiceMenus[restaurant.id])}`}>
+                              {getMealIcon(roomServiceMenus[restaurant.id])}
+                              Menu: {roomServiceMenus[restaurant.id]}
+                            </Badge>
                           </div>
                         )}
                       </li>
@@ -128,7 +185,7 @@ export default function RestaurantStatusSection() {
                   })}
                 </ul>
               ) : (
-                <div className="text-center py-4">
+                <div className="text-center py-8">
                   <p className="text-[#888888]">No room service available at this time</p>
                 </div>
               )}
