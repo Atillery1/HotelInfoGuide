@@ -91,39 +91,39 @@ export default function RestaurantStatusSection() {
   };
   
   return (
-    <section className="py-8 bg-gray-900">
+    <section className="py-8 bg-gray-100">
       <div className="container mx-auto px-4">
-        <div className="bg-black rounded-sm shadow-md p-6 border border-[#DBA53A]/30">
+        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
           <div className="text-center mb-4">
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Current Restaurant Status
             </h2>
-            <div className="flex items-center justify-center text-sm text-gray-400">
+            <div className="flex items-center justify-center text-sm text-gray-500">
               <Clock className="mr-1 h-4 w-4 text-[#DBA53A]" /> 
               <span>Last updated: {currentTime}</span>
             </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-black p-4 rounded-sm border border-[#DBA53A]/30">
-              <h3 className="font-semibold text-[#DBA53A] mb-3 text-center">
-                Currently Open <span className="ml-2 bg-black text-[#DBA53A] px-2 py-0.5 rounded-sm border border-[#DBA53A] text-xs">{openCount} of {restaurants.length}</span>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h3 className="font-semibold text-gray-800 mb-3 text-center">
+                Currently Open <span className="ml-2 bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs">{openCount} of {restaurants.length}</span>
               </h3>
               <ul className="space-y-3">
                 {restaurants.map(restaurant => (
-                  <li key={restaurant.id} className={`p-3 rounded-sm ${openStatuses[restaurant.id] ? 'border border-[#DBA53A]' : 'border border-gray-700'}`}>
+                  <li key={restaurant.id} className={`p-3 rounded-lg ${openStatuses[restaurant.id] ? 'bg-green-50 border border-green-100' : 'border border-gray-200'}`}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                       <div>
-                        <span className="font-medium text-white">{restaurant.name}</span>
-                        <span className="text-xs text-gray-400 ml-1">({restaurant.location})</span>
+                        <span className="font-medium">{restaurant.name}</span>
+                        <span className="text-xs text-gray-500 ml-1">({restaurant.location})</span>
                       </div>
                       <div>
                         {openStatuses[restaurant.id] ? (
-                          <Badge variant="outline" className="bg-[#DBA53A]/20 text-[#DBA53A] border-[#DBA53A]/50 rounded-sm">
+                          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
                             <Check className="mr-1 h-3 w-3" /> Open
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="bg-black text-gray-400 border-gray-700 rounded-sm">
+                          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
                             <X className="mr-1 h-3 w-3" /> Closed
                           </Badge>
                         )}
@@ -132,7 +132,7 @@ export default function RestaurantStatusSection() {
                     
                     {openStatuses[restaurant.id] && currentMeals[restaurant.id] && (
                       <div className="mt-2 flex items-center">
-                        <Badge variant="outline" className="text-xs bg-black text-[#DBA53A] border-[#DBA53A]/30 rounded-sm">
+                        <Badge variant="outline" className={`text-xs ${getMealBadgeClass(currentMeals[restaurant.id])}`}>
                           {getMealIcon(currentMeals[restaurant.id])}
                           Currently serving: {currentMeals[restaurant.id]}
                         </Badge>
@@ -143,10 +143,10 @@ export default function RestaurantStatusSection() {
               </ul>
             </div>
             
-            <div className="bg-black p-4 rounded-sm border border-[#DBA53A]/30">
-              <h3 className="font-semibold text-[#DBA53A] mb-3 text-center">
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h3 className="font-semibold text-gray-800 mb-3 text-center">
                 <Utensils className="inline-block mr-1 h-4 w-4 text-[#DBA53A]" /> 
-                Room Service <span className="ml-2 bg-black text-[#DBA53A] px-2 py-0.5 rounded-sm border border-[#DBA53A] text-xs">{roomServiceCount} available</span>
+                Room Service <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs">{roomServiceCount} available</span>
               </h3>
               
               {roomServiceCount > 0 ? (
@@ -158,15 +158,15 @@ export default function RestaurantStatusSection() {
                     }
                     
                     return (
-                      <li key={restaurant.id} className={`p-3 rounded-sm ${roomServiceStatuses[restaurant.id] ? 'border border-[#DBA53A]' : 'border border-gray-700'}`}>
+                      <li key={restaurant.id} className={`p-3 rounded-lg ${roomServiceStatuses[restaurant.id] ? 'bg-blue-50 border border-blue-100' : 'border border-gray-200'}`}>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                          <span className="font-medium text-white">{restaurant.name}</span>
+                          <span className="font-medium">{restaurant.name}</span>
                           {roomServiceStatuses[restaurant.id] ? (
-                            <Badge className="bg-[#DBA53A]/20 text-[#DBA53A] border-[#DBA53A]/50 rounded-sm">
+                            <Badge className="bg-blue-100 text-blue-800 border-blue-200">
                               Available Now
                             </Badge>
                           ) : (
-                            <Badge variant="outline" className="bg-black text-gray-400 border-gray-700 rounded-sm">
+                            <Badge variant="outline" className="text-gray-500">
                               Unavailable
                             </Badge>
                           )}
@@ -174,7 +174,7 @@ export default function RestaurantStatusSection() {
                         
                         {roomServiceStatuses[restaurant.id] && (
                           <div className="mt-2 flex items-center">
-                            <Badge variant="outline" className="text-xs bg-black text-[#DBA53A] border-[#DBA53A]/30 rounded-sm">
+                            <Badge variant="outline" className={`text-xs ${getMealBadgeClass(roomServiceMenus[restaurant.id])}`}>
                               {getMealIcon(roomServiceMenus[restaurant.id])}
                               Menu: {roomServiceMenus[restaurant.id]}
                             </Badge>
@@ -186,7 +186,7 @@ export default function RestaurantStatusSection() {
                 </ul>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-gray-400">No room service available at this time</p>
+                  <p className="text-gray-500">No room service available at this time</p>
                 </div>
               )}
             </div>
