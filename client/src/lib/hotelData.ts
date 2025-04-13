@@ -146,5 +146,13 @@ export const amenities: Amenity[] = [
     hours: "Open 24 hours daily",
     description: "State-of-the-art exercise equipment to maintain your fitness routine.",
     iconType: "Dumbbell"
+  },
+  {
+    id: "business-center",
+    name: "Business Center",
+    location: "Lobby level",
+    hours: "Open 24 hours daily",
+    description: "Full-service business center with computers, printers, and high-speed internet access.",
+    iconType: "Laptop"
   }
 ];

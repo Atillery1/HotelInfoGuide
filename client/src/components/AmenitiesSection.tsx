@@ -1,6 +1,6 @@
 import AmenityCard from "./AmenityCard";
 import { amenities } from "@/lib/hotelData";
-import { Clock, Coffee, Bath, Waves, Dumbbell, ShoppingBag } from "lucide-react";
+import { Clock, Coffee, Bath, Waves, Dumbbell, ShoppingBag, Laptop } from "lucide-react";
 
 export default function AmenitiesSection() {
   return (
@@ -64,6 +64,12 @@ export default function AmenitiesSection() {
                 <ShoppingBag className="h-5 w-5 text-blue-600" />
               </div>
               <span className="text-sm">Market Pantry Access</span>
+            </div>
+            <div className="flex items-center p-3 rounded-lg bg-amber-50">
+              <div className="bg-amber-100 p-2 rounded-full mr-3">
+                <Laptop className="h-5 w-5 text-amber-600" />
+              </div>
+              <span className="text-sm">Business Center</span>
             </div>
           </div>
         </div>

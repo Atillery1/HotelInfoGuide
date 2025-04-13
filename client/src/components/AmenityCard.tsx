@@ -1,4 +1,4 @@
-import { MapPin, Clock, ShoppingBag, Dumbbell, Waves, ShowerHead, Utensils, Wifi } from "lucide-react";
+import { MapPin, Clock, ShoppingBag, Dumbbell, Waves, Laptop } from "lucide-react";
 import { Amenity } from "@/lib/hotelData";
 
 interface AmenityCardProps {
@@ -30,6 +30,13 @@ export default function AmenityCard({ amenity }: AmenityCardProps) {
           accentColor: "bg-red-500",
           hoverColor: "group-hover:border-red-500"
         };
+      case "Laptop":
+        return {
+          gradient: "from-amber-50 to-amber-100",
+          iconColor: "text-amber-500",
+          accentColor: "bg-amber-500",
+          hoverColor: "group-hover:border-amber-500"
+        };
       default:
         return {
           gradient: "from-gray-50 to-gray-100",
@@ -60,6 +67,12 @@ export default function AmenityCard({ amenity }: AmenityCardProps) {
       return (
         <div className={`rounded-full p-6 ${styles.gradient} shadow-inner`}>
           <Dumbbell className={`h-12 w-12 ${styles.iconColor}`} />
+        </div>
+      );
+    } else if (amenity.iconType === "Laptop") {
+      return (
+        <div className={`rounded-full p-6 ${styles.gradient} shadow-inner`}>
+          <Laptop className={`h-12 w-12 ${styles.iconColor}`} />
         </div>
       );
     }
