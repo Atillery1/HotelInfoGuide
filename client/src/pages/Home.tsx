@@ -37,16 +37,38 @@ export default function Home() {
     };
   }, []);
 
+  // Scroll reveal animation observer
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all scroll-reveal elements
+    const scrollElements = document.querySelectorAll('.scroll-reveal');
+    scrollElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5F5] text-[#333333] font-[Raleway]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/30 to-slate-900 text-white overflow-x-hidden">
       <NewHeader />
-      <Hero />
-      <RestaurantSection />
-      <div className="h-3 bg-gradient-to-r from-transparent via-[#DBA53A] to-transparent w-4/5 mx-auto my-8"></div>
-      <AmenitiesSection />
-      <div className="h-3 bg-gradient-to-r from-transparent via-[#DBA53A] to-transparent w-4/5 mx-auto my-8"></div>
-      <InternetSection />
-      <Footer />
+      <main className="relative">
+        <Hero />
+        <RestaurantSection />
+        <AmenitiesSection />
+        <InternetSection />
+        <Footer />
+      </main>
     </div>
   );
 }
