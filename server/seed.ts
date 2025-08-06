@@ -1,92 +1,53 @@
-import { ReactNode } from "react";
+import { db } from "./db";
+import { 
+  restaurants as restaurantsTable, 
+  amenities as amenitiesTable,
+  attractions as attractionsTable,
+  transportOptions as transportTable,
+  hotelInfo as hotelInfoTable,
+  feedback as feedbackTable
+} from "./db/schema";
 
-export interface Restaurant {
-  id: string;
-  name: string;
-  location: string;
-  operatingHours: {
-    title: string;
-    schedule: string[];
-    note?: string;
-  }[];
-  happyHour?: {
-    location?: string;
-    schedule: string[];
-  };
-  inRoomDining?: {
-    note?: string;
-    schedule: string[];
-  };
-  noInRoomDining?: string;
-}
-
-export interface Amenity {
-  id: string;
-  name: string;
-  location: string;
-  hours: string;
-  description: string;
-  iconType: string;
-}
-
-export interface Attraction {
-  id: string;
-  name: string;
-  category: 'nature' | 'museums' | 'entertainment' | 'shopping' | 'dining' | 'nightlife';
-  description: string;
-  distance: string;
-  walkTime: string;
-  rating: number;
-  website?: string;
-  phone?: string;
-}
-
-export interface TransportOption {
-  id: string;
-  name: string;
-  type: 'rideshare' | 'taxi' | 'hotel' | 'public' | 'rental';
-  cost: string;
-  waitTime: string;
-  phone?: string;
-  website?: string;
-  description: string;
-}
-
-export const restaurants: Restaurant[] = [
+// Restaurant data
+const restaurantsData = [
   {
     id: "saltine",
     name: "Saltine",
     location: "1st Floor",
-    operatingHours: [
+    description: "Fresh seafood, seasonal shellfish, and spirits in an elegant brasserie setting",
+    operatingHours: JSON.stringify([
       {
         title: "Lunch",
-        schedule: ["Monday – Friday: 11:30am – 3pm"]
+        schedule: ["Monday – Friday: 11:30 AM – 3:00 PM"]
       },
       {
-        title: "Brunch",
-        schedule: ["Saturday & Sunday: 10am – 3pm"]
+        title: "Brunch", 
+        schedule: ["Saturday & Sunday: 10:00 AM – 3:00 PM"]
       },
       {
         title: "Dinner",
         schedule: [
-          "Sunday – Thursday: 5pm – 11pm",
-          "Friday – Saturday: 5pm – 12pm"
+          "Sunday – Thursday: 5:00 PM – 11:00 PM",
+          "Friday – Saturday: 5:00 PM – 12:00 AM"
         ]
       }
-    ],
-    happyHour: {
+    ]),
+    happyHour: JSON.stringify({
       location: "Raw Bar Menu",
-      schedule: ["Monday – Friday: 3pm – 6pm"]
-    },
-    inRoomDining: {
+      schedule: ["Monday – Friday: 3:00 PM – 6:00 PM"]
+    }),
+    inRoomDining: JSON.stringify({
       schedule: ["Available daily until 10:30 PM"]
-    }
+    }),
+    phone: "757-763-6200",
+    website: "hiltonnorfolk.com"
   },
   {
     id: "varia",
     name: "Varia",
-    location: "2nd Floor",
-    operatingHours: [
+    location: "2nd Floor", 
+    description: "Trattoria-style Italian fare with curated wine selection, piano bar, and tasting room",
+    operatingHours: JSON.stringify([
       {
         title: "Breakfast",
         schedule: ["Daily: 7:00 AM – 10:00 AM"]
@@ -96,21 +57,24 @@ export const restaurants: Restaurant[] = [
         schedule: ["Tuesday – Saturday: 5:00 PM – 10:00 PM"],
         note: "Kitchen closes at 10:00 PM"
       }
-    ],
-    happyHour: {
+    ]),
+    happyHour: JSON.stringify({
       location: "Wolf Lounge Only",
       schedule: ["Tuesday – Friday: 5:00 PM – 7:00 PM"]
-    },
-    inRoomDining: {
+    }),
+    inRoomDining: JSON.stringify({
       note: "Available for breakfast",
       schedule: ["Daily: 7:00 AM – 10:00 AM"]
-    }
+    }),
+    phone: "757-763-6200",
+    website: "hiltonnorfolk.com"
   },
   {
     id: "grain",
     name: "Grain Rooftop Patio Bar",
     location: "5th Floor",
-    operatingHours: [
+    description: "Indoor-outdoor rooftop beer garden with patio, fire pit, and Elizabeth River views",
+    operatingHours: JSON.stringify([
       {
         title: "Weekdays",
         schedule: [
@@ -119,7 +83,7 @@ export const restaurants: Restaurant[] = [
         ]
       },
       {
-        title: "Weekends",
+        title: "Weekends", 
         schedule: [
           "Saturday: 4:00 PM – 2:00 AM",
           "Sunday: 4:00 PM – 12:00 AM"
@@ -136,50 +100,54 @@ export const restaurants: Restaurant[] = [
           "Friday & Saturday: Kitchen closes at 1:00 AM"
         ]
       }
-    ],
-    happyHour: {
+    ]),
+    happyHour: JSON.stringify({
       schedule: ["Monday – Friday: 3:00 PM – 5:00 PM"]
-    },
-    noInRoomDining: "No in-room dining available"
+    }),
+    noInRoomDining: "No in-room dining available",
+    phone: "757-763-6200", 
+    website: "hiltonnorfolk.com"
   }
 ];
 
-export const amenities: Amenity[] = [
+// Amenities data
+const amenitiesData = [
   {
     id: "market-pantry",
     name: "Market Pantry",
     location: "2nd Floor",
     hours: "24/7 convenience store",
-    description: "24/7 convenience store with snacks, drinks, and essentials behind the front desk.",
+    description: "24/7 convenience store with snacks, drinks, and essentials behind the front desk",
     iconType: "ShoppingBag"
   },
   {
     id: "pool",
-    name: "Indoor Pool",
+    name: "Indoor Pool", 
     location: "5th Floor",
     hours: "6:00 AM - 10:00 PM daily",
-    description: "Climate-controlled indoor pool with panoramic Norfolk views.",
+    description: "Climate-controlled indoor pool with panoramic Norfolk views",
     iconType: "Pool"
   },
   {
     id: "fitness-center",
     name: "Fitness Center",
-    location: "5th Floor",
+    location: "5th Floor", 
     hours: "24/7 modern equipment",
-    description: "State-of-the-art exercise equipment available 24 hours daily.",
+    description: "State-of-the-art exercise equipment available 24 hours daily",
     iconType: "Dumbbell"
   },
   {
     id: "empyrean-lounge",
     name: "Empyrean Level Lounge",
     location: "21st Floor",
-    hours: "Exclusive lounge access",
-    description: "Exclusive lounge with complimentary breakfast and evening hors d'oeuvres.",
+    hours: "Exclusive lounge access", 
+    description: "Exclusive lounge with complimentary breakfast and evening hors d'oeuvres",
     iconType: "Crown"
   }
 ];
 
-export const attractions: Attraction[] = [
+// Norfolk attractions data
+const attractionsData = [
   // Nature & Parks
   {
     id: "town-point-park",
@@ -192,12 +160,12 @@ export const attractions: Attraction[] = [
     website: "norfolkfestival.com"
   },
   {
-    id: "pagoda-garden",
+    id: "pagoda-garden", 
     name: "Pagoda & Oriental Garden",
     category: "nature",
     description: "Tranquil waterfront space with beautiful Taiwanese pagoda",
     distance: "0.3 miles",
-    walkTime: "6 min walk",
+    walkTime: "6 min walk", 
     rating: 4.3
   },
   {
@@ -211,7 +179,7 @@ export const attractions: Attraction[] = [
   },
   {
     id: "townebank-fountain-park",
-    name: "TowneBank Fountain Park",
+    name: "TowneBank Fountain Park", 
     category: "nature",
     description: "Waterfront plaza with interactive fountains and green space",
     distance: "0.2 miles",
@@ -221,7 +189,7 @@ export const attractions: Attraction[] = [
   {
     id: "plum-point-park",
     name: "Plum Point Park",
-    category: "nature",
+    category: "nature", 
     description: "Small riverfront park perfect for picnics and relaxation",
     distance: "0.4 miles",
     walkTime: "8 min walk",
@@ -241,7 +209,7 @@ export const attractions: Attraction[] = [
   },
   {
     id: "macarthur-memorial",
-    name: "MacArthur Memorial",
+    name: "MacArthur Memorial", 
     category: "museums",
     description: "Museum honoring General Douglas MacArthur's life and legacy",
     distance: "0.3 miles",
@@ -262,7 +230,7 @@ export const attractions: Attraction[] = [
     id: "hampton-roads-naval",
     name: "Hampton Roads Naval Museum",
     category: "museums",
-    description: "Naval fleet history museum located inside Nauticus",
+    description: "Naval fleet history museum located inside Nauticus", 
     distance: "0.2 miles",
     walkTime: "4 min walk",
     rating: 4.5
@@ -279,7 +247,7 @@ export const attractions: Attraction[] = [
 
   // Entertainment & Live Shows
   {
-    id: "chrysler-hall",
+    id: "chrysler-hall", 
     name: "Chrysler Hall",
     category: "entertainment",
     description: "Premier performing arts center featuring Broadway shows",
@@ -321,7 +289,7 @@ export const attractions: Attraction[] = [
     id: "scope-arena",
     name: "Scope Arena",
     category: "entertainment",
-    description: "Norfolk Admirals hockey and major concert venue",
+    description: "Norfolk Admirals hockey and major concert venue", 
     distance: "0.4 miles",
     walkTime: "8 min walk",
     rating: 4.2
@@ -352,7 +320,7 @@ export const attractions: Attraction[] = [
     name: "Waterside District",
     category: "shopping",
     description: "Waterfront dining and entertainment complex",
-    distance: "0.2 miles",
+    distance: "0.2 miles", 
     walkTime: "4 min walk",
     rating: 4.2,
     website: "watersidedistrict.com"
@@ -368,7 +336,8 @@ export const attractions: Attraction[] = [
   }
 ];
 
-export const transportOptions: TransportOption[] = [
+// Transportation options data
+const transportData = [
   {
     id: "uber",
     name: "Uber",
@@ -379,10 +348,10 @@ export const transportOptions: TransportOption[] = [
   },
   {
     id: "lyft",
-    name: "Lyft",
+    name: "Lyft", 
     type: "rideshare",
     cost: "$8-15",
-    waitTime: "5-10 minutes", 
+    waitTime: "5-10 minutes",
     description: "Competitive rates with friendly service"
   },
   {
@@ -423,18 +392,80 @@ export const transportOptions: TransportOption[] = [
   }
 ];
 
-export const hotelContact = {
+// Hotel information data
+const hotelInfoData = {
+  id: "hilton-norfolk-main",
   name: "Hilton Norfolk The Main",
   address: "100 East Main Street, Norfolk, VA 23510",
   phone: "757-763-6200",
-  wifi: {
-    network: "HILTON HONORS",
-    login: "Last name + Room number"
-  },
-  weather: {
-    current: "93°F",
-    condition: "Sunny & Hot",
+  wifiNetwork: "HILTON HONORS",
+  wifiLogin: "Last name + Room number",
+  currentWeather: JSON.stringify({
+    temperature: "93°F",
+    condition: "Sunny & Hot", 
     high: "96°",
     low: "77°"
-  }
+  })
 };
+
+async function seed() {
+  console.log("🌱 Seeding database with Hilton Norfolk digital concierge data...");
+
+  try {
+    // Clear existing data
+    console.log("🧹 Clearing existing data...");
+    await db.delete(feedbackTable);
+    await db.delete(transportTable);
+    await db.delete(attractionsTable);
+    await db.delete(amenitiesTable);
+    await db.delete(restaurantsTable);
+    await db.delete(hotelInfoTable);
+
+    // Insert hotel information
+    console.log("🏨 Inserting hotel information...");
+    await db.insert(hotelInfoTable).values(hotelInfoData);
+
+    // Insert restaurants
+    console.log("🍽️ Inserting restaurant data...");
+    await db.insert(restaurantsTable).values(restaurantsData);
+
+    // Insert amenities
+    console.log("🏊‍♂️ Inserting amenities data...");
+    await db.insert(amenitiesTable).values(amenitiesData);
+
+    // Insert Norfolk attractions
+    console.log("🗺️ Inserting Norfolk attractions...");
+    await db.insert(attractionsTable).values(attractionsData);
+
+    // Insert transportation options
+    console.log("🚗 Inserting transportation options...");
+    await db.insert(transportTable).values(transportData);
+
+    console.log("✅ Database seeding completed successfully!");
+    console.log(`📊 Seeded data summary:`);
+    console.log(`   • 1 hotel information record`);
+    console.log(`   • ${restaurantsData.length} restaurants`);
+    console.log(`   • ${amenitiesData.length} amenities`);
+    console.log(`   • ${attractionsData.length} Norfolk attractions`);
+    console.log(`   • ${transportData.length} transportation options`);
+
+  } catch (error) {
+    console.error("❌ Error seeding database:", error);
+    throw error;
+  }
+}
+
+// Run seeding if this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  seed()
+    .then(() => {
+      console.log("🎉 Seeding process completed!");
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error("💥 Seeding process failed:", error);
+      process.exit(1);
+    });
+}
+
+export { seed };
